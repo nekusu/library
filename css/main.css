@@ -45,7 +45,6 @@
 }
 
 .accent-button {
-	color: var(--text);
 	background-color: var(--accent);
 }
 
@@ -81,6 +80,7 @@ button,
 #submit {
 	cursor: pointer;
 	font-weight: 500;
+	color: var(--text);
 	border-radius: var(--radius);
 	box-shadow: var(--close-shadow);
 	transition: var(--transition);
@@ -98,13 +98,24 @@ button:active,
 }
 
 #add-book {
-	margin: 20px 55px;
+	margin: 20px 5px 20px 55px;
 	padding: 10px 18px;
 	font-size: 14px;
 }
 
-#add-book .material-icons-round {
+#add-book .material-icons-round,
+#clear-data .material-icons-round {
 	font-size: 17px;
+}
+
+#clear-data {
+	margin: 20px 5px;
+	padding: 10px 18px;
+	background-color: #ce2642;
+}
+
+#clear-data:hover {
+	background-color: #e62746;
 }
 
 #library {
@@ -123,7 +134,8 @@ button:active,
 	text-align: center;
 }
 
-.book.hidden {
+.book.hidden,
+#clear-data.hidden {
 	pointer-events: none;
 	opacity: 0;
 	transform: scale(0.8);
