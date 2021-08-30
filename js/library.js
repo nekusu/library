@@ -1,10 +1,16 @@
 const addBookButton = document.querySelector('#add-book');
 const clearDataButton = document.querySelector('#clear-data');
+const sortButton = document.querySelector('#sort-by');
+const sortType = document.querySelector('#sort-type');
+const sortDirection = document.querySelector('#direction');
 const library = document.querySelector('#library');
 const formContainer = document.querySelector('#form-container');
 const bookForm = formContainer.querySelector('#book-form');
 const submitFormButton = document.querySelector('#submit');
+const sortTypes = ['name', 'author', 'pages'];
 const books = JSON.parse(localStorage.getItem('books')) || [];
+let sortBy = 'name';
+let ascendingSorting = true;
 let currentId = 0;
 updateLibrary();
 
@@ -121,6 +127,7 @@ function createBook(name, author, pages, read, id) {
 function updateLibrary() {
 	if (books.length) {
 		library.innerHTML = '';
+		sortBooks();
 		clearDataButton.classList.remove('hidden');
 		books.forEach(({ name, author, pages, read }, i) => {
 			const book = createBook(name, author, pages, read, i);
@@ -141,8 +148,31 @@ function clearData() {
 	updateLibrary();
 }
 
+function sortBooks() {
+	sortType.textContent = sortBy;
+	books.sort((a, b) => {
+		[first, second] = sortBy === 'pages' ? [+a[sortBy], +b[sortBy]] : [a[sortBy].toLowerCase(), b[sortBy].toLowerCase()];
+		direction = ascendingSorting ? 1 : -1;
+		return (first > second) ? direction : -direction;
+	});
+}
+
+function changeSortType() {
+	const index = sortTypes.findIndex(type => type === sortType.textContent);
+	sortBy = sortTypes[index + 1 > 2 ? index - 2 : index + 1];
+	updateLibrary();
+}
+
+function changeSortDirection() {
+	sortDirection.classList.toggle('descending');
+	ascendingSorting = !ascendingSorting;
+	updateLibrary();
+}
+
 addBookButton.addEventListener('click', toggleBookForm);
 clearDataButton.addEventListener('click', clearData);
+sortButton.addEventListener('click', changeSortType);
+sortDirection.addEventListener('click', changeSortDirection);
 formContainer.addEventListener('click', toggleBookForm);
 bookForm.addEventListener('submit', submitForm);
 library.addEventListener('click', toggleBookForm);
