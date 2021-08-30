@@ -24,10 +24,9 @@
 	--dark: 0.125;
 	--darkest: 0.175;
 	--radius: 30px;
-	--radius-alt: 25px;
 	--close-shadow: 0 2px 6px rgba(0, 0, 0, var(--lightest)), 0 8px 14px rgba(0, 0, 0, var(--light));
 	--distant-shadow: 0 2px 6px rgba(0, 0, 0, var(--dark)), 0 12px 20px rgba(0, 0, 0, var(--darkest));
-	--top-shadow: 0 -2px 6px rgba(0, 0, 0, var(--lightest)), 0 -8px 14px rgba(0, 0, 0, var(--light));
+	--transition: opacity 0.25s, background-color 0.25s, box-shadow 0.25s, border 0.25s, transform 0.25s;
 }
 
 .box {
@@ -35,13 +34,31 @@
 	border-radius: var(--radius);
 	background-color: var(--background-alt);
 	box-shadow: var(--close-shadow);
-	transition: all 0.25s ease;
+	transition: var(--transition);
 }
 
 .material-icons-round {
 	font-size: 20px;
 	vertical-align: sub;
 	color: var(--icon);
+}
+
+.accent-button {
+	color: var(--text);
+	background-color: var(--accent);
+}
+
+.accent-button:hover {
+	background-color: var(--accent-hover);
+	box-shadow: var(--distant-shadow);
+}
+
+.box-header {
+	margin: -20px -30px 10px;
+	padding: 20px 30px 15px !important;
+	color: var(--text);
+	background-color: var(--background-dark);
+	border-radius: var(--radius) var(--radius) 0 0;
 }
 
 header {
@@ -59,12 +76,13 @@ body {
 	background-color: var(--background);
 }
 
-button {
+button,
+#submit {
 	cursor: pointer;
 	font-weight: 500;
 	border-radius: var(--radius);
 	box-shadow: var(--close-shadow);
-	transition: all 0.25s ease;
+	transition: var(--transition);
 }
 
 .box:hover,
@@ -77,12 +95,6 @@ button:hover {
 	margin: 20px 55px;
 	padding: 10px 18px;
 	font-size: 14px;
-	color: var(--text);
-	background-color: var(--accent);
-}
-
-#add-book:hover {
-	background-color: var(--accent-hover)
 }
 
 #add-book .material-icons-round {
@@ -99,6 +111,9 @@ button:hover {
 	margin: 10px;
 	padding: 20px 30px;
 	width: 270px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 	text-align: center;
 }
 
@@ -108,21 +123,15 @@ button:hover {
 
 .book > div {
 	padding: 5px 0;
-	transition: all 0.25s ease;
+	transition: var(--transition);
 }
 
 .book #name {
-	margin: -20px -30px 0;
-	padding: 20px 30px 15px;
 	font-size: 20px;
 	font-weight: 600;
-	color: var(--text);
-	background-color: var(--background-dark);
-	border-radius: var(--radius) var(--radius) 0 0;
 }
 
 .book #author {
-	margin-top: 10px;
 	font-size: 16px;
 	color: var(--text-alt2);
 }
@@ -144,4 +153,85 @@ button:hover {
 
 .book button:hover {
 	background-color: var(--hover-alt);
+}
+
+#form-container {
+	height: 100vh;
+	width: 100vw;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.25);
+	transition: var(--transition);
+}
+
+#form-container.hidden {
+	pointer-events: none;
+	opacity: 0;
+}
+
+#form-container.hidden #book-form {
+	transform: scale(0.8);
+}
+
+#book-form {
+	margin: 25px;
+	padding: 20px 30px;
+	width: 400px;
+	display: flex;
+	flex-direction: column;
+	color: var(--text);
+	border-radius: var(--radius);
+	background-color: var(--background-alt);
+	box-shadow: var(--distant-shadow);
+	transition: var(--transition);
+}
+
+#book-form > div {
+	padding: 12px 0;
+}
+
+#book-form #title {
+	text-align: center;
+	font-size: 24px;
+	font-weight: 600;
+}
+
+#book-form .form-group {
+	display: flex;
+	flex-direction: column;
+}
+
+#book-form .form-group input {
+	margin-top: 6px;
+	padding: 6px 10px;
+	width: 100%;
+	font-size: 14px;
+	color: var(--text-alt2);
+	background-color: var(--background);
+	border-radius: 2px;
+	border-bottom: 2px solid var(--text-alt2);
+	transition: var(--transition);
+}
+
+#book-form label {
+	margin-right: 6px;
+}
+
+#book-form input[type="number"] {
+	width: 80px;
+}
+
+#book-form input:focus {
+	border-color: var(--accent-hover);
+}
+
+#book-form #submit {
+	margin: 10px 0 5px;
+	padding: 8px 18px;
+	align-self: center;
+	font-size: 14px;
 }

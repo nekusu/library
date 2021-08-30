@@ -17,21 +17,45 @@
 	<header>
 		<h1>Library</h1>
 	</header>
+	<div class="hidden" id="form-container">
+		<form id="book-form" action="">
+			<div class="box-header" id="title">Add a new book</div>
+			<div class="form-group">
+				<label for="name">Name</label>
+				<input type="text" name="name" id="name" placeholder="Enter the book name" required>
+			</div>
+			<div class="form-group">
+				<label for="author">Author</label>
+				<input type="text" name="author" id="author" placeholder="Enter the book author" required>
+			</div>
+			<div class="form-group">
+				<label for="author">Pages</label>
+				<input type="number" name="pages" id="pages" value="0" min="3" max="10000" required>
+			</div>
+			<div>
+				<label for="read">Did you read this book?</label>
+				<input type="checkbox" name="read" id="read">
+			</div>
+			<input class="accent-button" id="submit" type="submit" value="Add">
+		</form>
+	</div>
 	<main>
-		<button class="box" id="add-book"><span class="material-icons-round">add</span> Add book</button>
+		<button class="accent-button" id="add-book"><span class="material-icons-round">add</span> Add book</button>
 		<div id="library">
 			<div class="box book">
-				<div id="name">The Name of the Book</div>
+				<div class="box-header" id="name">The Name of the Book</div>
 				<div id="author">The Author of the Book</div>
 				<div id="pages">999 pages</div>
 				<div id="actions">
-					<button id="read"><span class="check material-icons-round">radio_button_unchecked</span></button>
-					<button id="edit"><span class="material-icons-round">edit</span></button>
-					<button id="delete"><span class="material-icons-round">delete_outline</span></button>
+					<button id="read" title="Not Read"><span
+							class="check material-icons-round">radio_button_unchecked</span></button>
+					<button id="edit" title="Edit"><span class="material-icons-round">edit</span></button>
+					<button id="delete" title="Delete"><span class="material-icons-round">delete_outline</span></button>
 				</div>
 			</div>
 		</div>
 	</main>
+	<script src="js/library.js"></script>
 </body>
 
 </html>
