@@ -18,8 +18,8 @@
 		<h1>Library</h1>
 	</header>
 	<div class="hidden" id="form-container">
-		<form id="book-form" action="">
-			<div class="box-header" id="title">Add a new book</div>
+		<form id="book-form">
+			<div class="box-header" id="title"></div>
 			<div class="form-group">
 				<label for="name">Name</label>
 				<input type="text" name="name" id="name" placeholder="Enter the book name" required>
@@ -32,25 +32,26 @@
 				<label for="author">Pages</label>
 				<input type="number" name="pages" id="pages" value="0" min="3" max="10000" required>
 			</div>
-			<div>
+			<div id="form-read">
 				<label for="read">Did you read this book?</label>
 				<input type="checkbox" name="read" id="read">
 			</div>
-			<input class="accent-button" id="submit" type="submit" value="Add">
+			<input class="accent-button" id="submit" type="submit">
 		</form>
 	</div>
 	<main>
 		<button class="accent-button" id="add-book"><span class="material-icons-round">add</span> Add book</button>
 		<div id="library">
 			<div class="box book">
-				<div class="box-header" id="name">The Name of the Book</div>
-				<div id="author">The Author of the Book</div>
-				<div id="pages">999 pages</div>
-				<div id="actions">
-					<button id="read" title="Not Read"><span
+				<div class="box-header name">The Name of the Book</div>
+				<div class="author">The Author of the Book</div>
+				<div class="pages">999 pages</div>
+				<div class="actions">
+					<button class="read" title="Not Read"><span
 							class="check material-icons-round">radio_button_unchecked</span></button>
-					<button id="edit" title="Edit"><span class="material-icons-round">edit</span></button>
-					<button id="delete" title="Delete"><span class="material-icons-round">delete_outline</span></button>
+					<button class="edit" title="Edit"><span class="material-icons-round">edit</span></button>
+					<button class="delete" title="Delete"><span
+							class="material-icons-round">delete_outline</span></button>
 				</div>
 			</div>
 		</div>
