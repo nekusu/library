@@ -1,8 +1,11 @@
+const buttons = document.querySelector('#buttons');
 const addBookButton = document.querySelector('#add-book');
 const clearDataButton = document.querySelector('#clear-data');
+const sortSettings = document.querySelector('#sort-settings');
 const sortButton = document.querySelector('#sort-by');
 const sortType = document.querySelector('#sort-type');
 const sortDirection = document.querySelector('#direction');
+const noBooks = document.querySelector('#no-books');
 const library = document.querySelector('#library');
 const formContainer = document.querySelector('#form-container');
 const bookForm = formContainer.querySelector('#book-form');
@@ -127,13 +130,23 @@ function createBook(name, author, pages, read, id) {
 }
 
 function updateLibrary() {
-	clearDataButton.className = books.length ? '' : 'hidden';
 	library.innerHTML = '';
-	sortBooks();
-	books.forEach(({ name, author, pages, read }, i) => {
-		const book = createBook(name, author, pages, read, i);
-		library.appendChild(book);
-	});
+	if (books.length) {
+		buttons.style.display = 'block';
+		sortSettings.style.display = 'block';
+		noBooks.style.display = 'none';
+		buttons.insertBefore(addBookButton, buttons.firstElementChild);
+		sortBooks();
+		books.forEach(({ name, author, pages, read }, i) => {
+			const book = createBook(name, author, pages, read, i);
+			library.appendChild(book);
+		});
+	} else {
+		buttons.style.display = 'none';
+		sortSettings.style.display = 'none';
+		noBooks.style.display = 'block';
+		noBooks.appendChild(addBookButton);
+	}
 }
 
 function clearData() {

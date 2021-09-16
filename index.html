@@ -16,6 +16,9 @@
 <body>
 	<header>
 		<h1>Library</h1>
+		<a class="box" id="github" href="https://github.com/nekusu" target="_blank" title="Check my GitHub!">nekusu<img
+				src="https://pngimg.com/uploads/github/github_PNG80.png" alt="GitHub">
+		</a>
 	</header>
 	<div class="hidden" id="form-container">
 		<form id="book-form">
@@ -42,7 +45,7 @@
 	<main>
 		<div id="buttons">
 			<button class="accent-button" id="add-book"><span class="material-icons-round">add</span> Add book</button>
-			<button class="hidden" id="clear-data"><span class="material-icons-round">delete_forever</span> Clear
+			<button id="clear-data"><span class="material-icons-round">delete_forever</span> Clear
 				data</button>
 		</div>
 		<div id="sort-settings">
@@ -51,6 +54,9 @@
 			<div id="direction"><span class="material-icons-round">vertical_align_top</span></div>
 		</div>
 		<div id="library"></div>
+		<div id="no-books">
+			<div>No books found.</div>
+		</div>
 	</main>
 	<script src="js/library.js"></script>
 </body>
