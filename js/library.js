@@ -23,26 +23,30 @@ class Book {
 	}
 }
 
+function saveBooks() {
+	localStorage.setItem('books', JSON.stringify(books));
+}
+
 function toggleBookForm(e) {
-	if (!e || [formContainer, addBookButton].includes(e.target) || e.target.className === 'edit') {
+	const formTitle = bookForm.querySelector('#title');
+	const formRead = bookForm.querySelector('#form-read');
+	if (!e || e.target === formContainer) {
 		bookForm.reset();
 		formContainer.classList.toggle('hidden');
-		if (e && e.target !== formContainer) {
-			const formTitle = bookForm.querySelector('#title');
-			const formRead = bookForm.querySelector('#form-read');
-			if (e.target === addBookButton) {
-				formTitle.textContent = 'Add a new book';
-				submitFormButton.value = 'Add';
-				formRead.style.display = 'block';
-			} else if (e.target.className === 'edit') {
-				formTitle.textContent = 'Edit book';
-				submitFormButton.value = 'Edit';
-				formRead.style.display = 'none';
-				currentId = e.target.parentNode.dataset.id;
-				const { name, author, pages, read } = books[currentId];
-				setFormValues(bookForm, [name, author, pages, read]);
-			}
-		}
+	} else if (e.target === addBookButton) {
+		bookForm.reset();
+		formContainer.classList.toggle('hidden');
+		formTitle.textContent = 'Add a new book';
+		submitFormButton.value = 'Add';
+		formRead.style.display = 'block';
+	} else if (e.target.className === 'edit') {
+		bookForm.reset();
+		formContainer.classList.toggle('hidden');
+		formTitle.textContent = 'Edit book';
+		submitFormButton.value = 'Edit';
+		formRead.style.display = 'none';
+		currentId = e.target.parentNode.dataset.id;
+		setFormValues(bookForm, books[currentId]);
 	}
 }
 
@@ -50,60 +54,58 @@ function toggleReadCheckbox(e) {
 	if (e.target.className === 'read') {
 		currentId = e.target.parentNode.dataset.id;
 		books[currentId].read = !books[currentId].read;
-		e.target.title = (books[currentId].read ? '' : 'Not ') + 'Read';
-		e.target.firstElementChild.textContent = books[currentId].read ? 'check_circle_outline' : 'radio_button_unchecked';
-		localStorage.setItem('books', JSON.stringify(books));
+		if (books[currentId].read) {
+			e.target.title = 'Read';
+			e.target.firstElementChild.textContent = 'check_circle_outline';
+		} else {
+			e.target.title = 'Not Read';
+			e.target.firstElementChild.textContent = 'radio_button_unchecked';
+		}
+		saveBooks();
 	}
+}
+
+function removeElement(el) {
+	el.classList.toggle('hidden');
+	el.addEventListener('transitionend', e => {
+		if (e.target === el && e.propertyName === 'opacity') {
+			el.remove();
+		}
+	});
 }
 
 function deleteBook(e) {
 	if (e.target.className === 'delete') {
 		currentId = e.target.parentNode.dataset.id;
 		books.splice(currentId, 1);
-		book = e.target.parentNode.parentNode;
-		book.classList.toggle('hidden');
-		book.addEventListener('transitionend', () => book.remove(), { once: true });
-		localStorage.setItem('books', JSON.stringify(books));
+		updateLibrary()
+		saveBooks();
 	}
 }
 
 function getFormValues(form) {
-	const values = [];
-	form.querySelectorAll('input').forEach(input => {
-		if (input.type !== 'submit') {
-			if (input.type === 'checkbox') {
-				values.push(input.checked);
-			} else {
-				values.push(input.value);
-			}
-		}
-	});
+	const values = [...form.querySelectorAll('div > input')].reduce((obj, input) => {
+		obj[input.name] = input[(input.type === 'checkbox') ? 'checked' : 'value'];
+		return obj;
+	}, {});
 	return values;
 }
 
-function setFormValues(form, values) {
-	form.querySelectorAll('input').forEach((input, i) => {
-		if (input.type !== 'submit') {
-			if (input.type === 'checkbox') {
-				input.checked = values[i];
-			} else {
-				input.value = values[i];
-			}
-		}
-	})
+function setFormValues(form, book) {
+	form.querySelectorAll('div > input').forEach(input => input[(input.type === 'checkbox') ? 'checked' : 'value'] = book[input.name]);
 }
 
 function submitForm(e) {
 	e.preventDefault();
 	this.checkValidity();
 	if (this.reportValidity()) {
+		const values = getFormValues(this);
 		if (submitFormButton.value === 'Add') {
-			books.push(new Book(...getFormValues(this)));
+			books.push(new Book(...Object.values(values)));
 		} else if (submitFormButton.value === 'Edit') {
-			const values = getFormValues(this);
-			Object.assign(books[currentId], { name: values[0], author: values[1], pages: values[2], read: values[3] });
+			Object.assign(books[currentId], values);
 		}
-		localStorage.setItem('books', JSON.stringify(books));
+		saveBooks();
 		toggleBookForm();
 		updateLibrary();
 	}
@@ -125,34 +127,27 @@ function createBook(name, author, pages, read, id) {
 }
 
 function updateLibrary() {
-	if (books.length) {
-		library.innerHTML = '';
-		sortBooks();
-		clearDataButton.classList.remove('hidden');
-		books.forEach(({ name, author, pages, read }, i) => {
-			const book = createBook(name, author, pages, read, i);
-			library.appendChild(book);
-		});
-	} else {
-		clearDataButton.classList.add('hidden');
-	}
+	clearDataButton.className = books.length ? '' : 'hidden';
+	library.innerHTML = '';
+	sortBooks();
+	books.forEach(({ name, author, pages, read }, i) => {
+		const book = createBook(name, author, pages, read, i);
+		library.appendChild(book);
+	});
 }
 
 function clearData() {
 	books.splice(0, books.length);
-	localStorage.setItem('books', JSON.stringify(books));
-	for (const book of library.childNodes) {
-		book.classList.toggle('hidden');
-		book.addEventListener('transitionend', () => book.remove(), { once: true });
-	}
+	library.innerHTML = '';
+	saveBooks();
 	updateLibrary();
 }
 
 function sortBooks() {
 	sortType.textContent = sortBy;
 	books.sort((a, b) => {
-		[first, second] = sortBy === 'pages' ? [+a[sortBy], +b[sortBy]] : [a[sortBy].toLowerCase(), b[sortBy].toLowerCase()];
-		direction = ascendingSorting ? 1 : -1;
+		[first, second] = (sortBy === 'pages') ? [+a[sortBy], +b[sortBy]] : [a[sortBy].toLowerCase(), b[sortBy].toLowerCase()];
+		const direction = ascendingSorting ? 1 : -1;
 		return (first > second) ? direction : -direction;
 	});
 }
