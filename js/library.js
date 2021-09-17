@@ -1,3 +1,7 @@
+const stats = document.querySelector('#stats');
+const totalBooks = stats.querySelector('#total-books');
+const readBooks = stats.querySelector('#read-books');
+const notReadBooks = stats.querySelector('#not-read-books');
 const buttons = document.querySelector('#buttons');
 const addBookButton = document.querySelector('#add-book');
 const clearDataButton = document.querySelector('#clear-data');
@@ -64,6 +68,7 @@ function toggleReadCheckbox(e) {
 			e.target.title = 'Not Read';
 			e.target.firstElementChild.textContent = 'radio_button_unchecked';
 		}
+		updateStats();
 		saveBooks();
 	}
 }
@@ -129,19 +134,29 @@ function createBook(name, author, pages, read, id) {
 	return book;
 }
 
+function updateStats() {
+	const readAmount = books.reduce((read, book) => read + (book.read ? 1 : 0), 0);
+	totalBooks.firstElementChild.textContent = books.length;
+	readBooks.firstElementChild.textContent = readAmount;
+	notReadBooks.firstElementChild.textContent = books.length - readAmount;
+}
+
 function updateLibrary() {
 	library.innerHTML = '';
 	if (books.length) {
+		stats.style.display = 'block';
 		buttons.style.display = 'block';
 		sortSettings.style.display = 'block';
 		noBooks.style.display = 'none';
 		buttons.insertBefore(addBookButton, buttons.firstElementChild);
+		updateStats();
 		sortBooks();
 		books.forEach(({ name, author, pages, read }, i) => {
 			const book = createBook(name, author, pages, read, i);
 			library.appendChild(book);
 		});
 	} else {
+		stats.style.display = 'none';
 		buttons.style.display = 'none';
 		sortSettings.style.display = 'none';
 		noBooks.style.display = 'block';
